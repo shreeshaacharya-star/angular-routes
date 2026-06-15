@@ -12,20 +12,24 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "ES2022",
-    "module": "preserve"
+    "module": "preserve",
+    "paths": {
+      "@core/*": ["./src/app/core/*"],
+      "@auth/*": ["./src/app/auth/*"],
+    },
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
-    "strictInputAccessModifiers": true
+    "strictInputAccessModifiers": true,
   },
   "files": [],
   "references": [
     {
-      "path": "./tsconfig.app.json"
+      "path": "./tsconfig.app.json",
     },
     {
-      "path": "./tsconfig.spec.json"
-    }
-  ]
+      "path": "./tsconfig.spec.json",
+    },
+  ],
 }
