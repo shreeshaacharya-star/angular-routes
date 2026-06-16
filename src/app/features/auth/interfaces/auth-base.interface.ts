@@ -1,10 +1,12 @@
-import { GuestLoginCredentials } from '@auth/types/guest-login.type';
-import { User } from '@auth/types/user.type';
-import { Observable } from 'rxjs';
+import { HttpResourceRef } from '@angular/common/http';
+import { GuestLoginCredentials, EmailLoginCredentials } from '@auth/types/login-credentials.type';
+import { EmailUser, GuestUser, User } from '@auth/types/user.type';
 
-interface AuthBase<TCredentials, TUser> {
-  login(credentials: TCredentials): Observable<TUser>;
-  logout(): Observable<void>;
+export interface AuthBase<TCredentials = void, TUser = User> {
+  login(credentials: TCredentials): HttpResourceRef<TUser>;
+  logout(): HttpResourceRef<void>;
 }
 
-export interface GuestAuth extends AuthBase<GuestLoginCredentials, User> {}
+export interface GuestAuth extends AuthBase<GuestLoginCredentials, GuestUser> {}
+export interface EmailAuth extends AuthBase<EmailLoginCredentials, EmailUser> {}
+export interface SocialAuth extends AuthBase {}

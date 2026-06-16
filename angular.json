@@ -21,7 +21,6 @@
         "@schematics/angular:interface": {
           "type": "interface"
         }
-      }
       },
       "root": "",
       "sourceRoot": "src",
@@ -38,9 +37,7 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.css"
-            ],
+            "styles": ["src/styles.css"],
             "server": "src/main.server.ts",
             "outputMode": "server",
             "security": {
@@ -95,12 +92,7 @@
             "configDir": ".storybook",
             "browserTarget": "angular-routes:build",
             "compodoc": true,
-            "compodocArgs": [
-              "-e",
-              "json",
-              "-d",
-              "."
-            ],
+            "compodocArgs": ["-e", "json", "-d", "."],
             "port": 6006
           }
         },
@@ -110,12 +102,7 @@
             "configDir": ".storybook",
             "browserTarget": "angular-routes:build",
             "compodoc": true,
-            "compodocArgs": [
-              "-e",
-              "json",
-              "-d",
-              "."
-            ],
+            "compodocArgs": ["-e", "json", "-d", "."],
             "outputDir": "storybook-static"
           }
         }

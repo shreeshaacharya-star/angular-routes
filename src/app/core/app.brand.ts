@@ -7,6 +7,7 @@ const BRAND_REGISTRY = {
   userEmail: 'user-email',
   strongPassword: 'strong-password',
   authUserId: 'auth-user-id',
+  userAge: 'user-age',
 } as const;
 
 type RegisteredBrand = (typeof BRAND_REGISTRY)[keyof typeof BRAND_REGISTRY];
