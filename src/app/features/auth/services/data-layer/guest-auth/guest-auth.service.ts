@@ -27,7 +27,7 @@ export class GuestAuthService implements GuestAuth {
   public userResource = this.#userResource.asReadonly();
 
   login(credentials: GuestLoginCredentials): void {
-    this.#credentials.set(credentials);
+    this.#credentials.set({ ...credentials });
   }
 
   logout(): void {

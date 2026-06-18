@@ -82,9 +82,13 @@
 
         <tr class="border-b border-gray-50">
           <td class="py-2.5 pr-6 text-gray-400 w-36">.value()</td>
+          @if (userResource()?.hasValue()) {
           <td class="py-2.5 text-gray-800 break-all">
             {{ userResource()?.value() | json }}
           </td>
+          } @else {
+          <td class="py-2.5 text-gray-800 break-all">—</td>
+          }
         </tr>
 
         <tr class="border-b border-gray-50">

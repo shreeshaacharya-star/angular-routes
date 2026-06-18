@@ -32,7 +32,7 @@ export class EmailAuthService implements EmailAuth {
   public readonly userResource = this.#userResource.asReadonly();
 
   login(credentials: EmailLoginCredentials) {
-    this.#credentials.set(credentials);
+    this.#credentials.set({ ...credentials });
   }
 
   logout() {
