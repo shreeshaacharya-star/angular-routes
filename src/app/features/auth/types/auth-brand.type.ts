@@ -9,5 +9,5 @@ export type Gender = Brand<string, 'gender'>;
 export type UserImage = Brand<string, 'user-image'>;
 export type AccessToken = Brand<string, 'access-token'>;
 export type RefreshToken = Brand<string, 'refresh-token'>;
-export type UserAge = Brand<string, 'user-age'>;
+export type UserAge = Brand<number, 'user-age'>;
 export type StrongPassword = Brand<string, 'strong-password'>;

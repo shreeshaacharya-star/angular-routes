@@ -5,7 +5,6 @@ import { GuestUser } from '@auth/types/user.type';
 
 @Service()
 export class GuestAuthService implements GuestAuth {
-  readonly type = 'guest';
   readonly #document = inject(DOCUMENT);
 
   readonly #credentials = signal<GuestLoginCredentials | undefined>(undefined);

@@ -1,0 +1,145 @@
+<div class="min-h-screen bg-gray-50 p-8">
+  <!-- Header + Actions -->
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <h1 class="text-lg font-medium text-gray-900">Auth debugger</h1>
+      <p class="text-sm text-gray-500">userResource — live signal inspector</p>
+    </div>
+    <div class="flex gap-2">
+      <button
+        (click)="login(loginCredentials1)"
+        [disabled]="userResource()?.isLoading() || userResource()?.hasValue()"
+        class="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg
+               bg-blue-50 text-blue-700 border border-blue-200
+               hover:bg-blue-100 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity">
+        Guest Login
+      </button>
+      <button
+        (click)="login(loginCredentials2)"
+        [disabled]="userResource()?.isLoading() || userResource()?.hasValue()"
+        class="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg
+               bg-green-50 text-green-700 border border-green-200
+               hover:bg-green-100 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity">
+        Email Login
+      </button>
+      <button
+        (click)="logout()"
+        [disabled]="!userResource()?.hasValue()"
+        class="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg
+               bg-red-50 text-red-700 border border-red-200
+               hover:bg-red-100 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity">
+        Logout
+      </button>
+    </div>
+  </div>
+
+  <!-- Stat cards -->
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+
+    <div class="bg-white rounded-xl border border-gray-100 p-4">
+      <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">status</p>
+      <span class="inline-block text-xs font-medium px-2.5 py-1 rounded-md"
+        [class]="userResource()?.status() === 'resolved' ? 'bg-green-50 text-green-700'
+               : userResource()?.status() === 'loading'  ? 'bg-blue-50 text-blue-700'
+               : userResource()?.status() === 'error'    ? 'bg-red-50 text-red-700'
+               :                                        'bg-gray-100 text-gray-500'">
+        {{ userResource()?.status() }}
+      </span>
+    </div>
+
+    <div class="bg-white rounded-xl border border-gray-100 p-4">
+      <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">isLoading</p>
+      <p class="text-base font-medium"
+        [class]="userResource()?.isLoading() ? 'text-blue-600' : 'text-gray-700'">
+        {{ userResource()?.isLoading() }}
+      </p>
+    </div>
+
+    <div class="bg-white rounded-xl border border-gray-100 p-4">
+      <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">hasValue</p>
+      <p class="text-base font-medium"
+        [class]="userResource()?.hasValue() ? 'text-green-600' : 'text-gray-700'">
+        {{ userResource()?.hasValue() }}
+      </p>
+    </div>
+
+    <div class="bg-white rounded-xl border border-gray-100 p-4">
+      <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">error</p>
+      <p class="text-base font-medium"
+        [class]="userResource()?.error() ? 'text-red-600' : 'text-gray-400'">
+        {{ userResource()?.error() ?? '—' }}
+      </p>
+    </div>
+
+  </div>
+
+  <!-- Signal fields table -->
+  <div class="bg-white rounded-xl border border-gray-100 p-5 mb-4">
+    <p class="text-xs text-gray-400 uppercase tracking-wide mb-3">Signal fields</p>
+
+    <table class="w-full text-sm font-mono">
+      <tbody>
+
+        <tr class="border-b border-gray-50">
+          <td class="py-2.5 pr-6 text-gray-400 w-36">.value()</td>
+          <td class="py-2.5 text-gray-800 break-all">
+            {{ userResource()?.value() | json }}
+          </td>
+        </tr>
+
+        <tr class="border-b border-gray-50">
+          <td class="py-2.5 pr-6 text-gray-400">.status()</td>
+          <td class="py-2.5 text-gray-800">{{ userResource()?.status() }}</td>
+        </tr>
+
+        <tr class="border-b border-gray-50">
+          <td class="py-2.5 pr-6 text-gray-400">.isLoading()</td>
+          <td class="py-2.5 text-gray-800">{{ userResource()?.isLoading() }}</td>
+        </tr>
+
+        <tr class="border-b border-gray-50">
+          <td class="py-2.5 pr-6 text-gray-400">.hasValue()</td>
+          <td class="py-2.5 text-gray-800">{{ userResource()?.hasValue() }}</td>
+        </tr>
+
+        <tr class="border-b border-gray-50">
+          <td class="py-2.5 pr-6 text-gray-400">.error()</td>
+          <td class="py-2.5 text-gray-800">{{ userResource()?.error() | json }}</td>
+        </tr>
+
+        <tr>
+          <td class="py-2.5 pr-6 text-gray-400">.snapshot()</td>
+          <td class="py-2.5 text-gray-800 break-all">{{ userResource()?.snapshot() | json }}</td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Resolved value block -->
+  @if (userResource()?.hasValue()) {
+    <div class="bg-white rounded-xl border border-gray-100 p-5">
+      <p class="text-xs text-gray-400 uppercase tracking-wide mb-3">Resolved value</p>
+      <pre class="text-xs text-gray-700 whitespace-pre-wrap break-all">{{ userResource()?.value() | json }}</pre>
+    </div>
+  }
+
+  <!-- Loading indicator -->
+  @if (userResource()?.isLoading()) {
+    <div class="flex items-center gap-2 mt-4 text-sm text-blue-600">
+      <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+      </svg>
+      Fetching user…
+    </div>
+  }
+
+  <!-- Error block -->
+  @if (userResource()?.status() === 'error') {
+    <div class="mt-4 bg-red-50 border border-red-100 rounded-xl p-4 text-sm text-red-700">
+      <strong class="font-medium">Error:</strong> {{ userResource()?.error() | json }}
+    </div>
+  }
+
+</div>

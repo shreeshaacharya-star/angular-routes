@@ -1,13 +1,20 @@
 import { Routes } from '@angular/router';
 
-export const authRoutes: Routes = [
+const authRoutes: Routes = [
   {
     path: '',
     loadComponent: () => import('../components/auth-landing/auth-landing.component'),
     children: [
       {
-        path: 'login',
+        path: 'email',
+        loadComponent: () => import('../components/email-login/email-login.component'),
+      },
+      {
+        path: 'guest',
+        loadComponent: () => import('../components/guest-login/guest-login.component'),
       },
     ],
   },
 ];
+
+export default authRoutes;

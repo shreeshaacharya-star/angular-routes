@@ -1,4 +1,4 @@
-import { Service, inject, Resource, computed } from '@angular/core';
+import { Service, inject, Resource, computed, signal } from '@angular/core';
 import { GuestAuthService } from '@auth/services/data-layer/guest-auth/guest-auth.service';
 import { EmailAuthService } from '@auth/services/data-layer/email-auth/email-auth.service';
 import assert from 'node:assert';
@@ -12,8 +12,8 @@ export class AuthService {
 
   #loginType: LoginType | undefined = undefined;
 
-  public userResource: Resource<User | undefined> | undefined = undefined;
-  public isLoggedIn = computed(() => this.userResource?.hasValue());
+  public userResource = signal<Resource<User | undefined> | undefined>(undefined);
+  public isLoggedIn = computed(() => this.userResource()?.hasValue());
 
   get loginType(): LoginType | undefined {
     return this.#loginType;
@@ -24,11 +24,11 @@ export class AuthService {
 
     switch (credentials.type) {
       case 'guest':
-        this.userResource = this.#guestAuthSerice.userResource;
+        this.userResource.set(this.#guestAuthSerice.userResource);
         this.#guestAuthSerice.login(credentials.credentials);
         break;
       case 'email':
-        this.userResource = this.#emailAuthService.userResource;
+        this.userResource.set(this.#emailAuthService.userResource);
         this.#emailAuthService.login(credentials.credentials);
         break;
       default:
@@ -47,7 +47,7 @@ export class AuthService {
       default:
         assert(false, `Invalid login type ${this.#loginType}`);
     }
-    this.userResource = undefined;
+    this.userResource.set(undefined);
     this.#loginType = undefined;
   }
 }

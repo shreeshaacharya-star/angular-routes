@@ -6,4 +6,4 @@ import { Component } from '@angular/core';
   templateUrl: './guest-login.component.html',
   styleUrl: './guest-login.component.css',
 })
-export class GuestLoginComponent {}
+export default class GuestLoginComponent {}

@@ -6,4 +6,4 @@ import { Component } from '@angular/core';
   templateUrl: './email-login.component.html',
   styleUrl: './email-login.component.css',
 })
-export class EmailLoginComponent {}
+export default class EmailLoginComponent {}

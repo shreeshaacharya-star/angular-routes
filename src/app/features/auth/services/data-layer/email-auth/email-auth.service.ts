@@ -6,7 +6,6 @@ import { EmailUser } from '@auth/types/user.type';
 
 @Service()
 export class EmailAuthService implements EmailAuth {
-  readonly type = 'email';
   readonly #credentials = signal<EmailLoginCredentials | undefined>(undefined);
   readonly #userResource = httpResource<EmailUser>(() => {
     const credentials = this.#credentials();
@@ -26,7 +25,7 @@ export class EmailAuthService implements EmailAuth {
         password: credentials.password,
         expiresInMins: 30,
       },
-      credentials: 'include',
+      withCredentials: true,
     };
   });
 
