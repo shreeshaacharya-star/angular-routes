@@ -1,59 +1,53 @@
-import { HttpResourceRef } from '@angular/common/http';
-import { Service, signal, inject } from '@angular/core';
-import { LoggedInUser, User } from '@auth/types/user.type';
+import { Service, inject, Resource, computed } from '@angular/core';
 import { GuestAuthService } from '@auth/services/data-layer/guest-auth/guest-auth.service';
 import { EmailAuthService } from '@auth/services/data-layer/email-auth/email-auth.service';
-import { SocialAuthService } from '@auth/services/data-layer/social-auth/social-auth.service';
 import assert from 'node:assert';
+import { LoginCredentials } from '@auth/types/login-credentials.type';
+import { LoginType, User } from '@auth/types/user.type';
 
 @Service()
 export class AuthService {
   readonly #guestAuthSerice = inject(GuestAuthService);
   readonly #emailAuthService = inject(EmailAuthService);
-  readonly #socialAuthService = inject(SocialAuthService);
 
-  readonly #loggedInUser = signal<LoggedInUser | undefined>(undefined);
-  public readonly loggedInUser = this.#loggedInUser.asReadonly();
+  #loginType: LoginType | undefined = undefined;
 
-  readonly #loginType = signal<LoggedInUser['loginType'] | undefined>(undefined);
+  public userResource: Resource<User | undefined> | undefined = undefined;
+  public isLoggedIn = computed(() => this.userResource?.hasValue());
 
-  #resource: HttpResourceRef<LoggedInUser['user']> | undefined;
-
-  private setLoggedInUser(user: LoggedInUser | undefined): void {
-    this.#loggedInUser.set(user);
+  get loginType(): LoginType | undefined {
+    return this.#loginType;
   }
 
-  setLoginType(loginType: LoggedInUser['loginType']): void {
-    this.#loginType.set(loginType);
-  }
+  login(credentials: LoginCredentials): void {
+    this.#loginType = credentials.type;
 
-  login(credentials: void) {
-    const loginType = this.#loginType();
-    if (!loginType) {
-      assert(false, 'Login type should be set before logging in');
-      return;
-    }
-
-    switch (loginType) {
+    switch (credentials.type) {
       case 'guest':
-        this.#resource = this.#guestAuthSerice.login(credentials);
-        this.#loggedInUser.set(
-          this.#resource?.hasValue()
-            ? { loginType: 'guest', user: this.#resource.value }
-            : undefined,
-        );
+        this.userResource = this.#guestAuthSerice.userResource;
+        this.#guestAuthSerice.login(credentials.credentials);
         break;
       case 'email':
-        this.#resource = this.#emailAuthService.login(credentials);
-        break;
-      case 'social':
-        this.#resource = this.#socialAuthService.login(credentials);
+        this.userResource = this.#emailAuthService.userResource;
+        this.#emailAuthService.login(credentials.credentials);
         break;
       default:
-        assert(false, `Invalid login type ${loginType satisfies never}`);
-        return;
+        assert(false, `Invalid login type ${credentials.type}`);
     }
   }
 
-  logout(): void {}
+  logout(): void {
+    switch (this.#loginType) {
+      case 'guest':
+        this.#guestAuthSerice.logout();
+        break;
+      case 'email':
+        this.#emailAuthService.logout();
+        break;
+      default:
+        assert(false, `Invalid login type ${this.#loginType}`);
+    }
+    this.userResource = undefined;
+    this.#loginType = undefined;
+  }
 }
